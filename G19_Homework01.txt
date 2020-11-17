@@ -1,0 +1,348 @@
+/*
+--------------------------------------------------------------------------------
+Name: Niket Panjwani, Nathan Gronowski, Yiqun Zhang
+Group #19
+Course: CNIT 37200 - Database Programming
+Homework #1 - Intermediate SQL & Basic PL/SQL
+--------------------------------------------------------------------------------
+*/
+
+
+-- Question 01-A
+/* 
+Step 1: Create a new table FIRSTNAME containing all the unique firstname from 
+        CUSTOMER table of Eagle Database
+Note: You will need to use Eagle Database to run this query 
+*/
+CREATE TABLE FIRSTNAME AS SELECT UNIQUE CUSTFIRSTNAME AS FIRSTNAME FROM CUSTOMER;
+
+
+/
+
+
+/* 
+Step 2: Create a new table LASTNAME containing all the unique firstname from 
+        CUSTOMER table of Eagle Database
+Note: You will need to use Eagle Database to run this query 
+*/
+CREATE TABLE LASTNAME AS SELECT UNIQUE CUSTLASTNAME AS LASTNAME FROM CUSTOMER;
+
+
+/
+
+
+/*
+Step 3: Create a new table CITY containing all the unique firstname from 
+        CUSTOMER table of Eagle Database
+Note: You will need to use Eagle Database to run this query 
+*/
+CREATE TABLE CITY AS SELECT UNIQUE CITY AS CITY FROM CUSTOMER;
+
+
+/
+
+
+/*
+Step 4: Create a new table STATE containing all the unique firstname from 
+        CUSTOMER table of Eagle Database
+Note: You will need to use Eagle Database to run this query 
+*/
+CREATE TABLE STATE AS SELECT UNIQUE STATE AS STATE FROM CUSTOMER;
+
+
+/
+
+
+/*
+Step 5: Create a table HW1_Q1_CONTACT which will contain the cross joins of 
+        tables firstname, lastname, city and state and limit it to 10 million 
+        rows
+*/
+CREATE TABLE HW1_Q1_CONTACT AS SELECT UNIQUE * FROM FIRSTNAME CROSS JOIN LASTNAME CROSS JOIN CITY CROSS JOIN STATE WHERE ROWNUM <= 10000000;
+
+
+/ 
+
+
+-- Question 01-B 
+-- The query for displaying the unique row count of HW1_Q1_CONTACT table.
+SELECT COUNT(*) FROM (SELECT DISTINCT * FROM HW1_Q1_CONTACT);
+/*
+  COUNT(*)
+---------- 
+  10000000
+*/
+
+
+/
+
+
+-- The query for displaying the distinct firstname's count for HW1_Q1_CONTACT table.
+SELECT COUNT(DISTINCT FIRSTNAME) AS UNIQUE_FIRST_NAME FROM HW1_Q1_CONTACT;
+/*
+UNIQUE_FIRST_NAME
+-----------------
+              161
+*/
+
+
+/
+
+
+-- The query for displaying the distinct lastname's count for HW1_Q1_CONTACT table.
+SELECT COUNT(DISTINCT LASTNAME) AS UNIQUE_LAST_NAME FROM HW1_Q1_CONTACT;
+/*
+UNIQUE_LAST_NAME
+----------------
+             220
+*/
+
+
+/
+
+
+-- The query for displaying the distinct city's count for HW1_Q1_CONTACT table.
+SELECT COUNT(DISTINCT CITY) AS UNIQUE_CITY FROM HW1_Q1_CONTACT;
+/*
+UNIQUE_CITY
+-----------
+        224
+*/
+
+
+/
+
+
+-- The query for displaying the distinct state's count for HW1_Q1_CONTACT table.
+SELECT COUNT(DISTINCT STATE) AS UNIQUE_STATE FROM HW1_Q1_CONTACT;
+/*
+UNIQUE_STATE
+------------
+           2
+*/
+
+
+/
+
+
+-- Question 02-A
+/*
+Step 1: Create a procedure GENERATE_MULTIPLICATION_TABLE using only for loop
+*/
+CREATE OR REPLACE PROCEDURE GENERATE_MULTIPLICATION_TABLE(P_NUM INTEGER) AS
+
+    NUM INTEGER;
+
+BEGIN   
+
+    NUM := P_NUM;  
+    IF NUM < 1 OR NUM > 10 THEN       -- Range check is within the IF statement.
+
+        DBMS_OUTPUT.PUT_LINE('NUMBER PROVIDED IS OUT OF RANGE! PLEASE TRY AGAIN WITH A NUMBER WITHIN THE RANGE OF 1 - 10.');
+
+    ELSE                -- ELSE statement with a FOR loop to format the output.
+    
+        FOR J IN 1..NUM LOOP
+
+            FOR I IN 1..NUM LOOP
+
+                DBMS_OUTPUT.PUT(RPAD((J * I),7,' ')); 
+
+            END LOOP;
+
+            DBMS_OUTPUT.PUT_LINE('');
+
+        END LOOP;    
+
+    END IF;    
+
+END GENERATE_MULTIPLICATION_TABLE;
+
+
+/
+
+
+/*
+Step 2: Execute the procedure GENERATE_MULTIPLICATION_TABLE with 
+        parameter value 8 
+*/
+EXECUTE GENERATE_MULTIPLICATION_TABLE(8);
+
+/*
+
+1      2      3      4      5      6      7      8      
+2      4      6      8      10     12     14     16     
+3      6      9      12     15     18     21     24     
+4      8      12     16     20     24     28     32     
+5      10     15     20     25     30     35     40     
+6      12     18     24     30     36     42     48     
+7      14     21     28     35     42     49     56     
+8      16     24     32     40     48     56     64
+
+*/
+
+
+/
+
+
+-- Question 02-B
+/* 
+Step 1: Create a procedure GENERATE_MULTIPLICATION_TABLE using only while loop
+*/
+CREATE OR REPLACE PROCEDURE GENERATE_MULTIPLICATION_TABLE(P_NUM INTEGER) AS
+
+    NUM INTEGER;
+
+    I INTEGER;
+
+    J INTEGER;
+
+BEGIN   
+
+    NUM := P_NUM;
+
+    I := 1;
+
+    J := 1;
+
+    IF NUM < 1 OR NUM > 10 THEN        -- Range check is within the IF statement.
+
+        DBMS_OUTPUT.PUT_LINE('NUMBER PROVIDED IS OUT OF RANGE! PLEASE TRY AGAIN WITH A NUMBER WITHIN THE RANGE OF 1 - 10.');
+
+    ELSE                 -- ELSE statement with a WHILE loop to format the output.
+
+        WHILE J <= NUM LOOP
+
+                WHILE I <= NUM LOOP 
+
+                    DBMS_OUTPUT.PUT(RPAD((J * I),7,' ')); 
+
+                    I := I + 1;
+
+                END LOOP;
+
+            J := J + 1;
+
+            I := 1;
+
+            DBMS_OUTPUT.PUT_LINE('');
+
+        END LOOP;    
+
+    END IF;    
+
+END GENERATE_MULTIPLICATION_TABLE;
+
+
+/
+
+
+/*
+Step 2: Execute the procedure GENERATE_MULTIPLICATION_TABLE with 
+        parameter value 8 
+*/
+EXECUTE GENERATE_MULTIPLICATION_TABLE(8);
+
+/*
+
+1      2      3      4      5      6      7      8      
+2      4      6      8      10     12     14     16     
+3      6      9      12     15     18     21     24     
+4      8      12     16     20     24     28     32     
+5      10     15     20     25     30     35     40     
+6      12     18     24     30     36     42     48     
+7      14     21     28     35     42     49     56     
+8      16     24     32     40     48     56     64     
+
+*/
+
+
+/
+            
+            
+-- Question 02-C
+/* 
+Step 1: Create a procedure GENERATE_MULTIPLICATION_TABLE using only simple loop
+*/
+CREATE OR REPLACE PROCEDURE GENERATE_MULTIPLICATION_TABLE(P_NUM INTEGER) AS
+
+    NUM INTEGER;
+
+    I INTEGER;
+
+    J INTEGER;
+
+BEGIN   
+
+    NUM := P_NUM;
+
+    I := 1;
+
+    J := 1;
+
+    IF NUM < 1 OR NUM > 10 THEN         -- Range check is within the IF statement.
+
+        DBMS_OUTPUT.PUT_LINE('NUMBER PROVIDED IS OUT OF RANGE! PLEASE TRY AGAIN WITH A NUMBER WITHIN THE RANGE OF 1 - 10.');
+
+    ELSE            -- ELSE statement with IF-ELSE statements to format the output.
+
+        LOOP 
+
+            IF J > NUM THEN
+
+                EXIT;
+
+            ELSE 
+
+                LOOP 
+
+                    IF I > NUM THEN
+
+                        EXIT;
+
+                    ELSE
+
+                        DBMS_OUTPUT.PUT(RPAD((J * I),7,' ')); 
+
+                        I := I + 1;
+
+                    END IF;
+
+                END LOOP;
+
+            J := J + 1;
+
+            I := 1;
+
+            DBMS_OUTPUT.PUT_LINE('');
+
+            END IF;
+
+        END LOOP;    
+
+    END IF;    
+
+END GENERATE_MULTIPLICATION_TABLE;
+
+
+/
+
+
+/*
+Step 2: Execute the procedure GENERATE_MULTIPLICATION_TABLE with 
+        parameter value 8 
+*/
+EXECUTE GENERATE_MULTIPLICATION_TABLE(8);
+
+/*
+
+1      2      3      4      5      6      7      8      
+2      4      6      8      10     12     14     16     
+3      6      9      12     15     18     21     24     
+4      8      12     16     20     24     28     32     
+5      10     15     20     25     30     35     40     
+6      12     18     24     30     36     42     48     
+7      14     21     28     35     42     49     56     
+8      16     24     32     40     48     56     64  
+
+*/
